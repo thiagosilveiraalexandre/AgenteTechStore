@@ -1,29 +1,51 @@
+import PySimpleGUI as sg
 from agents.sales_agent import SalesAgent
 
+# Tema (opcional, mas bonito)
+sg.theme("DarkBlue3")
 
-def main():
-    print("=" * 50)
-    print("🤖 Agente Inteligente TechStore")
-    print("Digite 'sair' para encerrar.")
-    print("=" * 50)
+# Layout da janela
+layout = [
+    [sg.Text("🤖 Agente Inteligente TechStore", font=("Helvetica", 16))],
+    [sg.Multiline(
+        size=(60, 15),
+        key="-HISTORICO-",
+        autoscroll=True,
+        disabled=True,
+        background_color="#2d2d2d",
+        text_color="white"
+    )],
+    [sg.Text("Você:"), sg.Input(size=(50, 1), key="-INPUT-", focus=True)],
+    [sg.Button("Enviar", bind_return_key=True), sg.Button("Sair")]
+]
 
-    # Cria o agente de vendas
-    agent = SalesAgent()
+window = sg.Window("TechStore Agent", layout, resizable=True, finalize=True)
+window.maximize()  # <--- Essa linha faz a mágica
 
-    while True:
-        pergunta = input("\nVocê: ")
+# Cria o agente
+agent = SalesAgent()
 
-        if pergunta.lower() == "sair":
-            print("Até logo!")
-            break
+# Loop principal da interface
+while True:
+    event, values = window.read()
 
+    if event in (sg.WIN_CLOSED, "Sair"):
+        break
+
+    if event == "Enviar":
+        pergunta = values["-INPUT-"].strip()
+        if not pergunta:
+            continue
+
+        # Exibe a pergunta no histórico
+        window["-HISTORICO-"].print(f"🧑 Você: {pergunta}")
+        window["-INPUT-"].update("")  # Limpa o campo
+
+        # Obtém a resposta do agente
         try:
             resposta = agent.responder(pergunta)
-            print(f"\nIA: {resposta}")
+            window["-HISTORICO-"].print(f"🤖 IA: {resposta}\n")
+        except Exception as e:
+            window["-HISTORICO-"].print(f"❌ Erro: {e}\n")
 
-        except Exception as erro:
-            print(f"\nErro: {erro}")
-
-
-if __name__ == "__main__":
-    main()
+window.close()
