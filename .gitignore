@@ -1,0 +1,28 @@
+# Ambiente virtual
+.venv/
+
+# Variáveis de ambiente
+.env
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+
+# VS Code
+.vscode/
+
+# Arquivos temporários
+*.log
+
+# Banco temporário
+*.db-journal
+
+# Vector Store
+vectorstore/
+
+# Cache
+.cache/
+
+# Sistema
+.DS_Store
+Thumbs.db
