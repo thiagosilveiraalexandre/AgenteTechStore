@@ -1,16 +1,40 @@
-\# Challenge One Tech Ai
+# Agente Inteligente TechStore
 
+## Sobre o projeto
 
+Este é um agente inteligente para atendimento ao cliente da TechStore, desenvolvido em Python com interface grafica (GUI) utilizando PySimpleGUI.
 
-\## Sobre o projeto
+O agente e capaz de:
+- Classificar a intencao da pergunta do usuario (produto, pedido, cliente, politica, conversa ou fora do escopo).
+- Responder perguntas sobre produtos e politicas com base em documentos PDF (utilizando RAG - Retrieval-Augmented Generation).
+- Fornecer respostas amigaveis e contextuais, utilizando um modelo de linguagem (LLM) via OpenRouter.
 
-Este é um agente inteligente para atendimento ao cliente, desenvolvido em Python com interface de chat.
+## Tecnologias utilizadas
 
+| Componente | Tecnologia |
+| :--- | :--- |
+| Linguagem | Python 3.14 |
+| Interface grafica | PySimpleGUI |
+| Framework RAG | LangChain |
+| Vector Store | ChromaDB |
+| Embeddings | sentence-transformers (all-MiniLM-L6-v2) |
+| LLM | OpenRouter (modelo inclusionai/ling-3.0-flash:free) |
+| Gerenciamento de dependencias | pip + requirements.txt |
+| Versionamento | Git + GitHub |
 
+## Pre-requisitos
 
-\## Como executar
+Antes de executar o projeto, voce precisara ter instalado:
 
+- Python 3.10+
+- Pip (gerenciador de pacotes do Python)
+- Uma chave de API do OpenRouter (gratuita). Cadastre-se em openrouter.ai e obtenha sua chave.
 
+## Instalacao e configuracao
 
-1\. Instale as dependências (listadas em `docs/requirements.txt`):
+### 1. Clone o repositorio
+
+```bash
+git clone https://github.com/thiagosilveiraalexandre/AgenteTechStore.git
+cd AgenteTechStore
 
