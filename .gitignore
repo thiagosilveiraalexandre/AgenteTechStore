@@ -26,3 +26,9 @@ vectorstore/
 # Sistema
 .DS_Store
 Thumbs.db
+
+# ChromaDB (índice vetorial do RAG)
+chroma_db/
+
+# PDFs de dados (para não subir arquivos grandes/sensiveis)
+knowledge/data/
