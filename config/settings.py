@@ -48,5 +48,3 @@ DOCS_PATH = os.path.join(BASE_DIR, "docs")
 # Caminho para a pasta vectorstore/ (onde será salvo o índice vetorial do RAG)
 VECTORSTORE_PATH = os.path.join(BASE_DIR, "vectorstore")
 
-# Caminho para o banco de dados SQLite (ainda não implementado, mas reservado)
-DATABASE_PATH = os.path.join(BASE_DIR, "database", "loja.db")
