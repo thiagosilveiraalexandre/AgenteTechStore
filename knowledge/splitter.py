@@ -5,7 +5,7 @@
 # mais relevantes de um PDF, sem sobrecarregar a LLM com texto desnecessário.
 # ============================================================
 
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
 def dividir_documentos(docs, chunk_size=500, overlap=50):
