@@ -1,5 +1,9 @@
 import warnings
 warnings.filterwarnings("ignore")
+
+# Também silencia logs do LangChain (se houver)
+import logging
+logging.getLogger("langchain").setLevel(logging.ERROR)
 # ============================================================
 # teste_oci.py
 # Script para testar o agente em ambientes sem interface gráfica
