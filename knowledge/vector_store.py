@@ -5,7 +5,7 @@
 # obter um retriever para busca semântica.
 # ============================================================
 
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from .embedder import criar_embedder
 from .loader import carregar_pdfs
 from .splitter import dividir_documentos
