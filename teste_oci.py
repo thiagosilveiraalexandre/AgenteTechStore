@@ -1,3 +1,5 @@
+import warnings
+warnings.filterwarnings("ignore")
 # ============================================================
 # teste_oci.py
 # Script para testar o agente em ambientes sem interface gráfica
