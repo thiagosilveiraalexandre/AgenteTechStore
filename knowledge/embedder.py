@@ -5,7 +5,7 @@
 # permitindo a busca semântica nos documentos.
 # ============================================================
 
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
 
 def criar_embedder(model_name: str = "sentence-transformers/all-MiniLM-L6-v2"):
