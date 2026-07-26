@@ -1,8 +1,5 @@
-# ============================================================
-# Supressão de avisos - DEVE SER ANTES DE QUALQUER IMPORTAÇÃO
-# ============================================================
 import os
-os.environ["HF_TOKEN"] = "dummy"  # elimina o aviso de token
+os.environ["HF_TOKEN"] = "dummy"
 os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
 
 import warnings
@@ -13,9 +10,6 @@ logging.getLogger("huggingface_hub").setLevel(logging.ERROR)
 logging.getLogger("langchain").setLevel(logging.ERROR)
 logging.getLogger("sentence_transformers").setLevel(logging.ERROR)
 
-# ============================================================
-# Agora sim, importa o agente
-# ============================================================
 from agents.sales_agent import SalesAgent
 
 def main():
