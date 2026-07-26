@@ -3,29 +3,36 @@
 # Script para testar o agente em ambientes sem interface gráfica
 # (ex: Oracle Cloud Infrastructure - OCI).
 # 
+# Funciona em loop até o usuário digitar "sair".
 # Uso: python teste_oci.py
 # ============================================================
 
 from agents.sales_agent import SalesAgent
 
 def main():
-    """
-    Função principal que cria o agente, solicita uma pergunta ao usuário
-    via terminal e exibe a resposta gerada.
-    """
+    print("=" * 50)
+    print("Agente Inteligente TechStore - Modo Terminal")
+    print("Digite 'sair' para encerrar.")
+    print("=" * 50)
+
     # Cria uma instância do agente (já carrega LLM, router e retriever)
-    print("Inicializando o agente...")
     agent = SalesAgent()
-    print("Agente pronto! Digite sua pergunta:")
 
-    # Lê a pergunta do usuário (entrada pelo terminal)
-    pergunta = input("Digite sua pergunta: ")
+    while True:
+        # Lê a pergunta do usuário
+        pergunta = input("\nVoce: ")
 
-    # Obtém a resposta do agente
-    resposta = agent.responder(pergunta)
+        # Verifica se o usuário quer sair
+        if pergunta.lower() in ["sair", "exit", "quit"]:
+            print("Encerrando o agente. Ate logo!")
+            break
 
-    # Exibe a resposta no terminal
-    print(f"\nResposta: {resposta}")
+        # Obtém a resposta do agente
+        try:
+            resposta = agent.responder(pergunta)
+            print(f"IA: {resposta}")
+        except Exception as e:
+            print(f"Erro: {e}")
 
 if __name__ == "__main__":
     main()
