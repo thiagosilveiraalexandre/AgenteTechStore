@@ -1,21 +1,21 @@
+# ============================================================
+# Supressão de avisos - DEVE SER ANTES DE QUALQUER IMPORTAÇÃO
+# ============================================================
 import os
+os.environ["HF_TOKEN"] = "dummy"  # elimina o aviso de token
 os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
 
 import warnings
 warnings.filterwarnings("ignore")
 
 import logging
+logging.getLogger("huggingface_hub").setLevel(logging.ERROR)
 logging.getLogger("langchain").setLevel(logging.ERROR)
+logging.getLogger("sentence_transformers").setLevel(logging.ERROR)
 
 # ============================================================
-# teste_oci.py
-# Script para testar o agente em ambientes sem interface gráfica
-# (ex: Oracle Cloud Infrastructure - OCI).
-# 
-# Funciona em loop até o usuário digitar "sair".
-# Uso: python teste_oci.py
+# Agora sim, importa o agente
 # ============================================================
-
 from agents.sales_agent import SalesAgent
 
 def main():
@@ -24,19 +24,13 @@ def main():
     print("Digite 'sair' para encerrar.")
     print("=" * 50)
 
-    # Cria uma instância do agente (já carrega LLM, router e retriever)
     agent = SalesAgent()
 
     while True:
-        # Lê a pergunta do usuário
         pergunta = input("\nVoce: ")
-
-        # Verifica se o usuário quer sair
         if pergunta.lower() in ["sair", "exit", "quit"]:
             print("Encerrando o agente. Ate logo!")
             break
-
-        # Obtém a resposta do agente
         try:
             resposta = agent.responder(pergunta)
             print(f"IA: {resposta}")
