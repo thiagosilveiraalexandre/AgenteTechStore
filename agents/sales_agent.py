@@ -68,16 +68,17 @@ class SalesAgent:
         # --- CASO CONVERSA: saudação / boas-vindas ---
         if intencao == Intent.CONVERSA:
             return (
-                "Olá! 😊 Seja bem-vindo à TechStore.\n\n"
-                "Posso ajudá-lo com:\n"
-                "• Produtos\n"
-                "• Preços\n"
-                "• Pedidos\n"
-                "• Entregas\n"
-                "• Pagamentos\n"
-                "• Garantias\n\n"
-                "Como posso ajudar?"
-            )
+        "Olá! 😊 Seja bem-vindo à TechStore.\n\n"
+        "Posso ajudá-lo com:\n"
+        "• Produtos\n"
+        "• Preços\n"
+        "• Pedidos\n"
+        "• Entregas\n"
+        "• Pagamentos\n"
+        "• Garantias\n"
+        "• Relatórios\n\n"  # <--- NOVO
+        "Como posso ajudar?"
+    )
 
         # --- CASO PRODUTO: usa RAG para buscar no PDF ---
         elif intencao == Intent.PRODUTO:
