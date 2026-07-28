@@ -9,6 +9,11 @@ O agente e capaz de:
 - Responder perguntas sobre produtos e politicas com base em documentos PDF (utilizando RAG - Retrieval-Augmented Generation).
 - Fornecer respostas amigaveis e contextuais, utilizando um modelo de linguagem (LLM) via OpenRouter.
 
+tem como você ver ele funcionando em 
+https://agente-tech-store--thiagosilveir12.replit.app
+
+<img width="1416" height="511" alt="print funcionando" src="https://github.com/user-attachments/assets/1379b160-434f-40c8-8c74-b8a3960e2728" />
+
 ## Tecnologias utilizadas
 
 | Componente | Tecnologia |
