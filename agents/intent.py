@@ -10,5 +10,5 @@ class Intent(Enum):
     CLIENTE = "CLIENTE"          # Cadastro, dados pessoais, login
     POLITICA = "POLITICA"        # Garantia, troca, devolução, prazos
     CONVERSA = "CONVERSA"        # Saudação, agradecimento, conversa fiada
-    RELATORIO = "RELATORIO"
+    RELATORIO = "RELATORIO"      
     FORA_DO_ESCOPO = "FORA_DO_ESCOPO"  # Assuntos não relacionados
