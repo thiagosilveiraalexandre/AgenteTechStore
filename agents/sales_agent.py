@@ -1,48 +1,71 @@
-# Importa a função que fornece o modelo de linguagem (LLM)
+# ============================================================
+# agents/sales_agent.py
+# Agente principal da TechStore.
+# Orquestra a classificação de intenção, a busca RAG e a geração
+# de respostas usando a LLM.
+# ============================================================
+
+# Importa a função que cria o modelo de linguagem (LLM)
 from llm.provider import get_llm
-# Importa o roteador de intenções (classifica a pergunta)
+
+# Importa o roteador que classifica a pergunta do usuário
 from agents.intent_router import IntentRouter
-# Importa o Enum Intent com as intenções possíveis
+
+# Importa o Enum com todas as intenções possíveis
 from agents.intent import Intent
-# Importa a função que obtém o retriever para buscar documentos (RAG)
+
+# Importa a função que obtém o retriever (busca no índice vetorial)
 from knowledge.vector_store import obter_retriever
 
 
 class SalesAgent:
     """
     Agente de vendas da TechStore.
-    Responsável por processar perguntas do usuário, classificar a intenção
-    e gerar respostas, utilizando RAG para buscar informações em documentos.
+
+    Responsabilidades:
+        - Classificar a intenção da pergunta do usuário.
+        - Para perguntas sobre produtos e políticas, usar RAG (busca em PDFs).
+        - Para outros assuntos, usar respostas fixas ou genéricas.
+        - Gerar respostas contextualizadas e amigáveis.
     """
 
     def __init__(self):
-        """Inicializa o agente com LLM, roteador e retriever."""
-        self.llm = get_llm()  # Modelo de linguagem para gerar respostas
-        self.router = IntentRouter()  # Classifica a intenção da pergunta
-        self.retriever = obter_retriever(k=3)  # Busca os 3 trechos mais relevantes dos PDFs
+        """
+        Inicializa o agente com:
+            - LLM: modelo de linguagem para gerar respostas.
+            - Router: classificador de intenções.
+            - Retriever: ferramenta de busca semântica (RAG) que retorna os
+              trechos mais relevantes dos PDFs indexados.
+        """
+        self.llm = get_llm()
+        self.router = IntentRouter()
+        # k=3 significa que o retriever vai devolver os 3 trechos mais similares
+        self.retriever = obter_retriever(k=3)
 
     def responder(self, pergunta: str) -> str:
         """
-        Processa a pergunta do usuário e retorna uma resposta adequada.
+        Processa a pergunta do usuário e retorna uma resposta.
 
-        Parâmetros:
-            pergunta (str): Texto digitado pelo usuário.
+        Etapas:
+            1. Classifica a intenção usando o router.
+            2. Roteia para a lógica específica de cada intenção.
+            3. Para PRODUTO e POLITICA, busca contexto no índice e usa a LLM.
+            4. Para RELATORIO, usa RAG também (perguntas sobre dados do catálogo).
+            5. Para CONVERSA, PEDIDO, CLIENTE e FORA_DO_ESCOPO, usa respostas fixas.
 
-        Retorna:
-            str: Resposta gerada pelo agente.
+        Parâmetro:
+            pergunta (str): A mensagem digitada pelo usuário.
 
-        O fluxo é:
-        1. Classifica a intenção da pergunta.
-        2. Com base na intenção, executa a lógica correspondente.
-        3. Para PRODUTO e POLITICA, usa RAG para buscar contexto e gerar resposta.
+        Retorno:
+            str: A resposta gerada pelo agente.
         """
 
-        # 1. Classifica a intenção da pergunta
+        # -- 1. Classificação da intenção --
         intencao = self.router.classificar(pergunta)
 
-        # 2. Lógica por intenção
+        # -- 2. Roteamento por intenção --
 
-        # CASO CONVERSA: saudação ou conversa inicial
+        # --- CASO CONVERSA: saudação / boas-vindas ---
         if intencao == Intent.CONVERSA:
             return (
                 "Olá! 😊 Seja bem-vindo à TechStore.\n\n"
@@ -56,63 +79,92 @@ class SalesAgent:
                 "Como posso ajudar?"
             )
 
-        # CASO PRODUTO: busca informações sobre produtos no índice vetorial (RAG)
+        # --- CASO PRODUTO: usa RAG para buscar no PDF ---
         elif intencao == Intent.PRODUTO:
-            # Busca trechos relevantes nos PDFs
+            # Busca os 3 trechos mais relevantes para a pergunta
             docs = self.retriever.invoke(pergunta)
+
+            # Se não encontrar nada, avisa o usuário
             if not docs:
                 return "Desculpe, não encontrei informações sobre esse produto no nosso catálogo."
-            # Concatena os trechos para formar o contexto
+
+            # Junta os trechos em um único bloco de contexto
             contexto = "\n\n".join([doc.page_content for doc in docs])
-            # Monta o prompt com contexto e pergunta
+
+            # Monta o prompt com instruções claras para a LLM
             prompt = f"""
-Você é um assistente de vendas da TechStore. Responda de forma amigável e direta, usando APENAS as informações do contexto abaixo.
+Você é um assistente de vendas da TechStore.
+Responda de forma amigável e direta, usando APENAS as informações do contexto abaixo.
 
 Contexto:
 {contexto}
 
 Pergunta do cliente: {pergunta}
 Resposta:"""
-            # Gera a resposta com a LLM
+
+            # Gera a resposta com a LLM e retorna o conteúdo
             resposta = self.llm.invoke(prompt)
             return resposta.content
 
-        # CASO PEDIDO: funcionalidade futura
+        # --- CASO PEDIDO: funcionalidade futura (sem RAG) ---
         elif intencao == Intent.PEDIDO:
             return (
                 "Em breve consultarei seus pedidos diretamente "
                 "em nosso banco de dados."
             )
 
-        # CASO CLIENTE: funcionalidade futura
+        # --- CASO CLIENTE: funcionalidade futura (sem RAG) ---
         elif intencao == Intent.CLIENTE:
             return (
                 "Em breve poderei consultar seus dados "
                 "de cadastro."
             )
 
-        # CASO POLITICA: busca informações sobre políticas no índice vetorial (RAG)
+        # --- CASO POLITICA: usa RAG para buscar no PDF ---
         elif intencao == Intent.POLITICA:
-            # Busca trechos relevantes nos PDFs
             docs = self.retriever.invoke(pergunta)
             if not docs:
                 return "Desculpe, não encontrei essa política em nossos documentos."
-            # Concatena os trechos para formar o contexto
+
             contexto = "\n\n".join([doc.page_content for doc in docs])
-            # Monta o prompt com contexto e pergunta
+
             prompt = f"""
-Você é um assistente de vendas da TechStore. Responda de forma clara e objetiva, usando APENAS as informações do contexto abaixo.
+Você é um assistente de vendas da TechStore.
+Responda de forma clara e objetiva, usando APENAS as informações do contexto abaixo.
 
 Contexto:
 {contexto}
 
 Pergunta do cliente: {pergunta}
 Resposta:"""
-            # Gera a resposta com a LLM
+
             resposta = self.llm.invoke(prompt)
             return resposta.content
 
-        # CASO FORA_DO_ESCOPO: assunto não relacionado à empresa
+        # --- CASO RELATORIO: usa RAG para responder perguntas sobre dados do catálogo ---
+        elif intencao == Intent.RELATORIO:
+            # Exemplos: "qual o produto mais caro?", "quantos produtos temos?"
+            docs = self.retriever.invoke(pergunta)
+            if not docs:
+                return "Desculpe, não encontrei informações suficientes no catálogo para responder."
+
+            contexto = "\n\n".join([doc.page_content for doc in docs])
+
+            prompt = f"""
+Você é um assistente de vendas da TechStore.
+Responda à pergunta sobre relatório ou análise usando APENAS os dados do contexto abaixo.
+Seja direto e numérico quando possível.
+
+Contexto:
+{contexto}
+
+Pergunta: {pergunta}
+Resposta:"""
+
+            resposta = self.llm.invoke(prompt)
+            return resposta.content
+
+        # --- CASO FORA_DO_ESCOPO (fallback) ---
         else:
             return (
                 "Posso ajudá-lo apenas com assuntos relacionados "
