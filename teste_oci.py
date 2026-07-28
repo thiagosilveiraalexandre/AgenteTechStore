@@ -10,10 +10,20 @@
 
 import os
 import warnings
-warnings.filterwarnings("ignore")  # Suprime avisos de depreciação (LangChain, etc.)
+
+# --- SUPRIME O AVISO DO HF_TOKEN ---
+os.environ["HF_TOKEN"] = "dummy"
+os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
+
+# Suprime avisos de depreciação (LangChain, etc.)
+warnings.filterwarnings("ignore")
+# Suprime avisos específicos do HuggingFace
+warnings.filterwarnings("ignore", message=".*unauthenticated.*")
+warnings.filterwarnings("ignore", message=".*HF_TOKEN.*")
 
 import logging
 logging.getLogger("langchain").setLevel(logging.ERROR)  # Remove logs verbosos do LangChain
+logging.getLogger("huggingface_hub").setLevel(logging.ERROR)  # Remove logs do HuggingFace
 
 # Importa o agente principal (já carrega LLM, router e retriever)
 from agents.sales_agent import SalesAgent
