@@ -82,6 +82,15 @@ Resposta: POLITICA
 Usuário: Como funciona a troca?
 Resposta: POLITICA
 
+Usuário: Qual o produto mais caro?
+Resposta: RELATORIO
+
+Usuário: Qual o produto mais barato?
+Resposta: RELATORIO
+
+Usuário: Quantos produtos temos?
+Resposta: RELATORIO
+
 Usuário: Quem descobriu o Brasil?
 Resposta: FORA_DO_ESCOPO
 
